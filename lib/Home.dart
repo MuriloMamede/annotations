@@ -16,12 +16,22 @@ class _HomeState extends State<Home> {
   var _db = AnnotationHelper();
   List<Annotation> _annotations = List<Annotation>();
 
-  _showRegisterScreen(){
+  _showRegisterScreen({Annotation annotation}){
+    String textSaveUpdate = "";
+    if(annotation == null){//saving
+      _titleController.text ="";
+      _descriptionController.text="";
+      textSaveUpdate = "Save";
+    }else{//updating
+      _titleController.text = annotation.title;
+      _descriptionController.text= annotation.description;
+      textSaveUpdate = "Update";
+    }
     showDialog(
         context: context,
       builder: (context){
           return AlertDialog(
-            title: Text("Add annotation"),
+            title: Text("$textSaveUpdate annotation"),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -54,7 +64,7 @@ class _HomeState extends State<Home> {
                   _saveAnnotation();
                   Navigator.pop(context);
                 },
-                child: Text("Save"),
+                child: Text(textSaveUpdate),
               )
             ],
           );
@@ -111,7 +121,52 @@ class _HomeState extends State<Home> {
     String formatedDate = formater.format( convertedDate);
     return formatedDate;
   }
+  Widget createCard(context, index){
+    final item = _annotations[index];
+    return Card(
+      child: Dismissible(
 
+          background: Container( color: Colors.red,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                )
+              ],
+            ),
+          ),
+          direction: DismissDirection.endToStart,
+          onDismissed: (direction){
+
+
+          },
+          key: Key(item.id.toString()),
+          child: ListTile(
+            title: Text( item.title),
+            subtitle: Text("${_formatDate(item.date)} - ${item.description}"),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+
+                GestureDetector(
+                  onTap: (){
+                    _showRegisterScreen(annotation: item);
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 16),
+                    child: Icon(
+                      Icons.edit,
+                      color: Colors.green,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )),
+    );
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -121,25 +176,16 @@ class _HomeState extends State<Home> {
         title: Text("Take a Note"),
         backgroundColor: Colors.lightGreen,
       ),
-      body: Center(
-        child: Column(
+      body:  Column(
           children: <Widget>[
             Expanded(
               child: ListView.builder(
                 itemCount: _annotations.length,
-                itemBuilder: (context, index){
-                    final item = _annotations[index];
-                    return Card(
-                      child: ListTile(
-                        title: Text( item.title),
-                        subtitle: Text("${_formatDate(item.date)} - ${item.description}"),
-                      ),
-                    );
-                  }),
-                ),
+                itemBuilder: createCard
+              )
+      ),
               ],
             ),
-          ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.green,
           foregroundColor: Colors.white,
