@@ -90,6 +90,9 @@ class _HomeState extends State<Home> {
 
   }
 
+
+
+
   _saveUpdateAnnotation( {Annotation annotationSelected}) async{
 
     String title = _titleController.text;
@@ -127,10 +130,18 @@ class _HomeState extends State<Home> {
     String formatedDate = formater.format( convertedDate);
     return formatedDate;
   }
+
+  _removeAnnotation(int id) async{
+
+    await _db.removeAnnotation(id);
+    _recoveryAnnotation();
+  }
+
   Widget createCard(context, index){
     final item = _annotations[index];
-    return Card(
-      child: Dismissible(
+    return  Card(
+
+    child:  Dismissible(
 
           background: Container( color: Colors.red,
             child: Row(
@@ -146,7 +157,10 @@ class _HomeState extends State<Home> {
           direction: DismissDirection.endToStart,
           onDismissed: (direction){
 
-
+            _removeAnnotation(item.id);
+            setState(() {
+              _annotations.removeAt(index);
+            });
           },
           key: Key(item.id.toString()),
           child: ListTile(
