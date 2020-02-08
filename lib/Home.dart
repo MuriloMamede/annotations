@@ -61,7 +61,7 @@ class _HomeState extends State<Home> {
               FlatButton(
                 onPressed: (){
 
-                  _saveAnnotation();
+                  _saveUpdateAnnotation(annotationSelected: annotation);
                   Navigator.pop(context);
                 },
                 child: Text(textSaveUpdate),
@@ -90,17 +90,23 @@ class _HomeState extends State<Home> {
 
   }
 
-  _saveAnnotation() async{
+  _saveUpdateAnnotation( {Annotation annotationSelected}) async{
 
     String title = _titleController.text;
     String description = _descriptionController.text;
-
+    if(annotationSelected == null){
+      Annotation annotation = Annotation(title,description,DateTime.now().toString());
+      int result = await _db.saveAnnotation(annotation);
+    }else{
+      annotationSelected.title = title;
+      annotationSelected.description = description;
+      int qtdUpdated = await _db.updateAnnotation(annotationSelected);
+    }
     _titleController.clear();
     _descriptionController.clear();
 
-    Annotation annotation = Annotation(title,description,DateTime.now().toString());
-    int result = await _db.saveAnnotation(annotation);
-    print("annotation saved "+result.toString());
+
+
 
     _recoveryAnnotation();
   }
