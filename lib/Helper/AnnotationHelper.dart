@@ -4,6 +4,8 @@ import 'package:anotacoes/model/Annotation.dart';
 class AnnotationHelper{
 
   static final String tableName = "annotation";
+
+
   static final AnnotationHelper _annotationHelper = AnnotationHelper._internal();
 
   Database _db;
@@ -47,6 +49,14 @@ class AnnotationHelper{
 
     int result = await bd.insert(tableName, annotation.toMap());
     return result;
+  }
+
+  recoveryAnnotation() async{
+
+    var bd = await db;
+    String sql = "SELECT * FROM $tableName ORDER BY date DESC;";
+    List annotations = await bd.rawQuery(sql);
+    return annotations;
   }
 }
 
