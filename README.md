@@ -12,6 +12,6 @@ This is Flutter App to take annotations!
 
 # And to remove, just slide left
 
-![](img/remove.PNG)
+![](img/remove.png)
 
 
