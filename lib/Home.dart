@@ -32,26 +32,28 @@ class _HomeState extends State<Home> {
       builder: (context){
           return AlertDialog(
             title: Text("$textSaveUpdate annotation"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                TextField(
-                  controller: _titleController,
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    labelText: "Title",
-                    hintText: "Type a title"
+            content: SingleChildScrollView(
+                          child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    controller: _titleController,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      labelText: "Title",
+                      hintText: "Type a title"
+                    ),
                   ),
-                ),
-                TextField(
-                  controller: _descriptionController,
-                  autofocus: false,
-                  decoration: InputDecoration(
-                      labelText: "Description",
-                      hintText: "Type a description"
-                  ),
-                )
-              ],
+                  TextField(
+                    controller: _descriptionController,
+                    autofocus: false,
+                    decoration: InputDecoration(
+                        labelText: "Description",
+                        hintText: "Type a description"
+                    ),
+                  )
+                ],
+              ),
             ),
             actions: <Widget>[
               FlatButton(
